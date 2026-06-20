@@ -55,7 +55,6 @@ jobs:
         ARCH="$(./get-arch)"
         echo "ARCH=${ARCH}" >> $GITHUB_ENV
         tar -czvf pspdev-${ARCH}.tar.gz pspdev
-        ls -l
 
     - uses: actions/upload-artifact@v7
       with:
