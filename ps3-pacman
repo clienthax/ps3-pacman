@@ -1,0 +1,33 @@
+#!/bin/bash
+
+## Make sure PSPDEV is set
+if [ -z "${PS3DEV}" ]; then
+    echo "The PS3DEV environment variable has not been set"
+    exit 1
+fi
+
+if [ ! -d "${PS3DEV}" ]; then
+    echo "${PS3DEV} does not exist"
+    exit 2
+fi
+
+## Use sudo if the current user doesn't own $PSPDEV
+if ! touch "${PS3DEV}" >/dev/null 2>&1; then
+    sudo PSPDEV="${PS3DEV}" "$0" "$@"
+    exit $?
+fi
+
+## Add the directory with pacman's binaries to the start of the PATH
+export PATH="${PS3DEV}/share/pacman/bin:${PATH}"
+
+## Run pacman and make sure to use the current PSPDEV
+pacman \
+  --root "${PS3DEV}" \
+  --dbpath "${PS3DEV}/var/lib/pacman" \
+  --config "${PS3DEV}/etc/pacman.conf" \
+  --cachedir "${PS3DEV}/var/cache/pacman/pkg" \
+  --gpgdir "${PS3DEV}/etc/pacman.d/gnupg/" \
+  --logfile "${PS3DEV}/var/log/pacman.log" \
+  --hookdir "${PS3DEV}/share/libalpm/hooks" \
+  --hookdir "${PS3DEV}/etc/pacman.d/hooks" \
+  --arch "$(${PS3DEV}/share/pacman/bin/get-arch)" "$@"

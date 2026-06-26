@@ -10,8 +10,8 @@ unset CC
 unset CXX
 
 ## Make sure PSPDEV is set
-if [ -z "${PSPDEV}" ]; then
-    echo "The PSPDEV environment variable has not been set"
+if [ -z "${PS3DEV}" ]; then
+    echo "The PS3DEV environment variable has not been set"
     exit 1
 fi
 
@@ -25,8 +25,8 @@ if [ "$(uname -s)" == "Darwin" ]; then
     export PKG_CONFIG_PATH="$(brew --prefix libarchive)/lib/pkgconfig"
 fi
 
-source PSPBUILD
-export pkgdir="${PSPDEV}"
+source PS3BUILD
+export pkgdir="${PS3DEV}"
 rm -rf pacman-v${pkgver}
 wget -nc ${source[0]}
 tar -xvf pacman-v${pkgver}.tar.gz

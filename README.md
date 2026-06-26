@@ -1,10 +1,10 @@
-# PSP Pacman
+# PS3 Pacman
 
 This respository contains all the files needed to build and install the pacman package managed for the PSP toolchain. Pacman can be used to build and manage packages with libraries for the PSP.
 
 This package provides the following commands:
-- **psp-pacman** - Allows users to install and manage PSP library packages.
-- **psp-makepkg** - Allows users to build packages from PSPBUILD files.
+- **ps3-pacman** - Allows users to install and manage PSP library packages.
+- **ps3-makepkg** - Allows users to build packages from PSPBUILD files.
 
 ## Dependencies
 

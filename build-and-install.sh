@@ -8,9 +8,9 @@ set -e
 unset CC
 unset CXX
 
-## Make sure PSPDEV is set
-if [ -z "${PSPDEV}" ]; then
-    echo "The PSPDEV environment variable has not been set"
+## Make sure PS3DEV is set
+if [ -z "${PS3DEV}" ]; then
+    echo "The PS3DEV environment variable has not been set"
     exit 1
 fi
 
@@ -30,7 +30,7 @@ rm -rf temp_build pkg src psp-pacman-*-*.pkg.tar.gz
 ## Install makepkg from source if it isn't already available and build the package
 if ! which makepkg > /dev/null; then
     echo "Did not find makepkg, downloading and building pacman from source"
-    source PSPBUILD
+    source PS3BUILD
     export pkgdir="${PWD}/temp_build/psp-pacman"
     mkdir -p "${pkgdir}"
     rm -rf pacman-v${pkgver}
@@ -44,26 +44,26 @@ if ! which makepkg > /dev/null; then
     cd "$WORKDIR"
     export PATH="${pkgdir}/share/pacman/bin:${PATH}"
     if (( EUID == 0 )); then
-        CARCH="$(./get-arch)" PSPDEV="${pkgdir}" makepkg -p PSPBUILD --asroot .
+        CARCH="$(./get-arch)" PS3DEV="${pkgdir}" makepkg -p PS3BUILD --asroot .
     else
-        CARCH="$(./get-arch)" PSPDEV="${pkgdir}" makepkg -p PSPBUILD .
+        CARCH="$(./get-arch)" PS3DEV="${pkgdir}" makepkg -p PS3BUILD .
     fi
 else
-    CARCH="$(./get-arch)" makepkg -p PSPBUILD .
+    CARCH="$(./get-arch)" makepkg -p PS3BUILD .
 fi
 
 ## Create the required directories for installation
-mkdir -m 755 -p "${PSPDEV}/var/lib/pacman"
+mkdir -m 755 -p "${PS3DEV}/var/lib/pacman"
 
 ## Add the directory with pacman's binaries to the start of the PATH
 export PATH="${PWD}/pkg/psp-pacman/share/pacman/bin:${PATH}"
 
 export LD_LIBRARY_PATH="${PWD}/pkg/psp-pacman/lib:${LD_LIBRARY_PATH}"
 
-## The package in $PSPDEV using the pacman that was build
+## The package in $PS3DEV using the pacman that was build
 ./pkg/psp-pacman/share/pacman/bin/pacman  \
-    --root "${PSPDEV}" \
-    --dbpath "${PSPDEV}/var/lib/pacman" \
+    --root "${PS3DEV}" \
+    --dbpath "${PS3DEV}/var/lib/pacman" \
     --config "pacman.conf" \
     --arch "$(./get-arch)" \
     --noconfirm \

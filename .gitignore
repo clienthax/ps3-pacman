@@ -2,10 +2,10 @@
 *~
 build/
 pacman-v*.tar.gz
-psp-pacman-*-*.pkg.tar.gz
+ps3-pacman-*-*.pkg.tar.gz
 src/
 pkg/
-pspdev/
+ps3dev/
 pacman-v*/
 pacman-v*.tar.gz*
 temp_build/

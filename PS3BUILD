@@ -1,7 +1,7 @@
-pkgname=psp-pacman
+pkgname=ps3-pacman
 pkgver=7.1.0
 pkgrel=1
-pkgdesc="The package manager for the PSPDEV SDK."
+pkgdesc="The package manager for the PS3DEV SDK."
 arch=(
   "alpine_x86_64"
   "ubuntu_x86_64"
@@ -11,7 +11,7 @@ arch=(
   "macos_x86_64"
   "macos_arm64"
 )
-url="https://github.com/pspdev/psp-pacman"
+url="https://github.com/ps3dev/ps3-pacman"
 license=('GPL-2.0-only')
 groups=()
 depends=()
@@ -22,7 +22,7 @@ source=(
   "https://gitlab.archlinux.org/pacman/pacman/-/archive/v${pkgver}/pacman-v${pkgver}.tar.gz"
   "makepkg.conf"
   "pacman.conf"
-  "pacman-${pkgver}-psp-strip.patch"
+  "pacman-${pkgver}-ps3-strip.patch"
   "pacman-${pkgver}-rootless.patch"
   "pacman-${pkgver}-add-asroot-option.patch"
   "get-arch"
@@ -45,23 +45,23 @@ prepare() {
   cd "pacman-v${pkgver}"
 
   # Apply patches
-  patch -p1 < "../pacman-${pkgver}-psp-strip.patch"
+  patch -p1 < "../pacman-${pkgver}-ps3-strip.patch"
   patch -p1 < "../pacman-${pkgver}-rootless.patch"
   patch -p1 < "../pacman-${pkgver}-add-asroot-option.patch"
 
   ## Fix some lines in the scripts which have hardcoded paths
-  find ./ -type f -name "*.in" -exec sed -i -e "s#LIBRARY=\${LIBRARY:-'@libmakepkgdir@'}#LIBRARY=\${LIBRARY:-\"\${PSPDEV}/share/makepkg\"}#g" {} \;
-  find ./ -type f -name "*.in" -exec sed -i -e "s#declare -r confdir='@sysconfdir@'#declare -r confdir=\"\${PSPDEV}/etc\"#g" {} \;
-  find ./ -type f -name "*.in" -exec sed -i -e "s#export TEXTDOMAINDIR='@localedir@'#export TEXTDOMAINDIR=\"\${PSPDEV}/share/locale\"#g" {} \;
-  find ./ -type f -name "*.in" -exec sed -i -e "s#'@libmakepkgdir@'#\${PSPDEV}/share/makepkg#g" {} \;
-  find ./ -type f -name "*.in" -exec sed -i -e "s#@libmakepkgdir@#\${PSPDEV}/share/makepkg#g" {} \;
+  find ./ -type f -name "*.in" -exec sed -i -e "s#LIBRARY=\${LIBRARY:-'@libmakepkgdir@'}#LIBRARY=\${LIBRARY:-\"\${PS3DEV}/share/makepkg\"}#g" {} \;
+  find ./ -type f -name "*.in" -exec sed -i -e "s#declare -r confdir='@sysconfdir@'#declare -r confdir=\"\${PS3DEV}/etc\"#g" {} \;
+  find ./ -type f -name "*.in" -exec sed -i -e "s#export TEXTDOMAINDIR='@localedir@'#export TEXTDOMAINDIR=\"\${PS3DEV}/share/locale\"#g" {} \;
+  find ./ -type f -name "*.in" -exec sed -i -e "s#'@libmakepkgdir@'#\${PS3DEV}/share/makepkg#g" {} \;
+  find ./ -type f -name "*.in" -exec sed -i -e "s#@libmakepkgdir@#\${PS3DEV}/share/makepkg#g" {} \;
 }
 
 build() {
   cd "pacman-v${pkgver}"
 
   meson build -Dprefix="${pkgdir}" --buildtype=release \
-    -Ddefault_library=static  -Dbuildscript=PSPBUILD \
+    -Ddefault_library=static  -Dbuildscript=PS3BUILD \
     -Droot-dir="${pkgdir}" -Dsysconfdir="etc" -Dmakepkg-template-dir="share/makepkg-template" -Dbindir="share/pacman/bin" -Dlocalstatedir="var" \
     -Ddoc=disabled -Di18n=false -Dbash-completions-dir="share/bash-completion/completions"
   cd build
@@ -81,8 +81,8 @@ package() {
   install -m 644 ../makepkg.conf "${pkgdir}/etc/makepkg.conf"
 
   mkdir  -m 755 -p "${pkgdir}/bin/"
-  install -m 755 ../psp-pacman "${pkgdir}/bin/psp-pacman"
-  install -m 755 ../psp-makepkg "${pkgdir}/bin/psp-makepkg"
+  install -m 755 ../ps3-pacman "${pkgdir}/bin/ps3-pacman"
+  install -m 755 ../ps3-makepkg "${pkgdir}/bin/ps3-makepkg"
   install -m 755 ../get-arch "${pkgdir}/share/pacman/bin/get-arch"
 
   mkdir -m 755 -p "$pkgdir/share/licenses/$pkgname"
